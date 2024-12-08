@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-time Kafka Messages</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+<h1>Kafka Messages:</h1>
+<div id="messages"></div>
+
+<script>
+    var socket = new SockJS('/websocket');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({}, function(frame) {
+        stompClient.subscribe('/topic/messages', function(messageOutput) {
+            var messageDiv = document.getElementById('messages');
+            var messageElement = document.createElement('div');
+            messageElement.appendChild(document.createTextNode(messageOutput.body));
+            messageDiv.appendChild(messageElement);
+        });
+    });
+</script>
+</body>
+</html>
